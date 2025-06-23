@@ -14,25 +14,30 @@ const io = new Server(server, {
   }
 });
 
-// Store rooms and messages
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log("✅ User connected:", socket.id);
 
   socket.on("join_room", (room) => {
     socket.join(room);
-    console.log(`User ${socket.id} joined room ${room}`);
+    console.log(`👤 ${socket.id} joined room ${room}`);
   });
 
-  socket.on("send_message", ({ room, encryptedMessage }) => {
-    console.log(`Encrypted message to ${room}:`, encryptedMessage);
-    socket.to(room).emit("receive_message", encryptedMessage);
+  socket.on("send_message", ({ room, encryptedMessage, sender }) => {
+    console.log(`[${room}] ${sender}: ${encryptedMessage}`);
+    socket.to(room).emit("receive_message", { encryptedMessage, sender });
+  });
+
+  socket.on("leave_room", (room) => {
+    socket.leave(room);
+    console.log(`🚪 ${socket.id} left room ${room}`);
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    console.log("❌ Disconnected:", socket.id);
   });
 });
 
-server.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

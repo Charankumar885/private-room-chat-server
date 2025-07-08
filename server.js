@@ -107,7 +107,8 @@ function updateUserList(room) {
 
 // ✅ Use environment port (Render) or fallback for local testing
 const PORT = process.env.PORT || 3001; // 3001 is for local fallback
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
+
 
